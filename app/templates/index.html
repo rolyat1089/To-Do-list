@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+  <div class="BODY_MAIN">
+    <div class="BODY_MAIN_INNER">
+      <div class="ADD_TODO_CONTAINER">
+        <div class="ALERT NAVBAR_BRAND ALERT_INFO">
+          <h2>Add New TODO</h2>
+        </div>
+        <div class="p-4 ADD_TODO_MAIN">
+          <form action="/add-todo/" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <hr>
+            <input type="submit" value="ADD" class="BUTTON">
+          </form>
+        </div>
+      </div>
+
+
+
+      <div class="TODO_TABLE">
+
+        {% if todos|length == 0 %}
+
+        <div class="p-4">
+          <div>
+            <p class="" style="font-size: 30px;">No Todos</p>
+          </div>
+        </div>
+
+        {%else%}
+        <div>
+          <div class="GRID_ROW TABLE_HEADER">
+            <p>#</p>
+            <p>Title</p>
+            <p>Status</p>
+            <p>Priority</p>
+            <p>Action</p>
+          </div>
+
+          <div>
+
+            {% for todo in todos %}
+            <div class="GRID_ROW">
+              <p>{{forloop.counter}}</p>
+              <p>{{todo.title}}</p>
+              <p>
+                {% if todo.status == 'C'%}
+                ✅
+                {%else%}
+                🕒
+                {%endif%}
+              </p>
+              <p>{{todo.priority}}</p>
+              <p>
+                <a href="/delete-todo/{{todo.id}}" title="Delete" class="">🗑️</a>
+                {% if todo.status == 'P'%}
+                <a href="/change-status/{{todo.id}}/C" title="Mark Completed" class="">✅</a>
+                {%else%}
+                <a href="/change-status/{{todo.id}}/P" title="Mark Pending" class="">🕒</a>
+                {%endif%}
+              </p>
+            </div>
+            {%endfor%}
+
+
+          </div>
+        </div>
+        {%endif%}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
